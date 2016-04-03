@@ -1,0 +1,54 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+table {
+	width: 800px;
+}
+
+
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	height: 30px;
+	text-align: left;
+}
+
+th, td {
+	padding: 0px 5px;
+}
+
+th {
+	background-color: gray;
+	color: white;
+}
+
+tr:nth-child(even) {
+	background-color: #EEEEEE;
+}
+
+.red {
+	color: red;
+}
+
+.row {
+	display: table-row;
+}
+
+label, input, select {
+	display: table-cell;
+}
+
+label {
+	width: 100px;
+}
+
+input[type='text'], input[type='date'], select {
+	width: 100px;
+}
+

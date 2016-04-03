@@ -1,0 +1,101 @@
+<html ng-app = "myApp">
+<head>
+	<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js'/></script>
+	<meta charset = 'utf-8'>
+	<title>Task Manager Angular</title>
+	<script type="text/javascript">
+	    var myAppModule = angular.module('myApp', []);
+	    
+		myAppModule.factory('taskFactory', function (){
+		    var tasks = [
+		        {name: 'Run', priority: "1 - HIGH", deadline: new Date('July 5, 2015'), created_date: new Date('July 3, 2015')},
+		        {name: 'Eat', priority: "0 - URGENT", deadline: new Date('July 5, 2015'), created_date: new Date('July 5, 2014')},
+		        {name: 'Play', priority: "3 - LOW", deadline: new Date('July 15, 2015'), created_date: new Date('July 9, 2014')},
+		        {name: 'Work', priority: "2 - MEDIUM", deadline: new Date('July 12, 2015'), created_date: new Date('July 11, 2014')}
+		        ];
+		    var factory = {};
+		    
+		    factory.getTasks = function (callback){
+		        callback(tasks);
+		    }
+
+		    
+		    factory.removeTask = function (task, callback){
+		    	tasks.splice(tasks.indexOf(task), 1);
+		        callback(tasks); 
+		    }
+
+		    factory.addTask = function (newTask, callback){
+		    	tasks.push(newTask); 
+		        callback(tasks); 
+		    	
+		    	var elem = document.getElementById('cTable'); 
+			  	elem.scrollTop = elem.scrollHeight;
+		    }
+
+		    return factory;
+		});
+
+		myAppModule.controller('taskController', function ($scope, taskFactory){
+		    $scope.tasks = [];
+
+		    taskFactory.getTasks(function (data){
+		        $scope.tasks = data;
+		    })
+
+		    $scope.removeTask = function(task) {
+		    	taskFactory.removeTask(task, function(updatedData){
+		    		$scope.tasks = updatedData; 
+		    	})
+		    }
+
+		    $scope.addTask = function (data){
+		    	console.log($scope.newTask.deadline);
+		    	$scope.newTask = {name: $scope.newTask.name, priority: $scope.newTask.priority, 
+		    		deadline: new Date($scope.newTask.deadline), created_date: new Date()};
+		    	taskFactory.addTask($scope.newTask, function(updatedData){
+		    		$scope.tasks = updatedData;
+		    	})
+		        $scope.newTask = {}; 
+		    }
+		})
+	</script>
+
+</head>
+<body>
+	<div ng-controller='taskController'>
+		<h1>Tasks</h1>
+	    <input class = 'feedback-input' type="text" placeholder = "Search Task" ng-model="filter_name">
+		<div class="customerTable" id = "cTable" >
+                <table >
+                    <tr>
+                        <td> Task </td>
+                        <td> Priority </td>
+                        <td> Deadline </td>
+                        <td> Created </td>
+                        <td> Actions </td>
+                    </tr>
+                    <tr ng-repeat="task in tasks | filter:filter_name | orderBy:'priority'">
+                        <td ng-bind="task.name"></td>
+                        <td ng-bind="task.priority"></td>
+                        <td ng-bind="task.deadline.toDateString()"></td>
+                        <td ng-bind="task.created_date.toDateString()"></td>
+                        <td><button class = "remove" ng-click='removeTask(task)' >Remove</button></td>
+                    </tr>
+                </table>
+            </div>
+		<form>
+			<h2>Add a new Task</h2>
+		    <input type='text' class = 'feedback-input' placeholder = 'Task Name' ng-model='newTask.name'>
+		    <select class = 'feedback-input' ng-model='newTask.priority'>
+		    	<option disabled value=''> Priority </option>
+		    	<option value='3 - LOW'>LOW</option>
+		    	<option value='2 - MEDIUM'>MEDIUM</option>
+		    	<option value='1 - HIGH'>HIGH</option>
+		    	<option value='0 - URGENT'>URGENT</option>
+		    </select>
+		   <p> Deadline: <input type='date' class = 'feedback-input' ng-model='newTask.deadline'></p>
+		    <input type='submit' value='Create' ng-click='addTask()'>
+		</form>
+</body>
+</html>

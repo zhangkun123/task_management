@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Task Manager</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Task Manager</h1>
+    <table>
+    	<thead>
+    		<tr>
+    			<th>Tasks</th>
+    			<th>Priority</th>
+    			<th>Deadline</th>
+    			<th>Created</th>
+    			<th>Actions</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+		    <% for (var i in tasks) { %>
+		    	<tr>
+                    <% var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] %>
+			    	<td><%= tasks[i].name %></td>
+			    	<td><%= tasks[i].priority %></td>
+                    <% var deadln = tasks[i].deadline %>
+			    	<td><%= month[deadln.getMonth()] %> <%= deadln.getDate() %>, <%= deadln.getFullYear() %></td>
+                    <% var create = tasks[i].created %>
+			    	<td><%= month[create.getMonth()] %> <%= create.getDate() %>, <%= create.getFullYear() %></td>
+			    	<td><a href='/delete/<%= tasks[i]._id %>'>Remove</a></td>
+		    	</tr>
+		    <% } %>
+		    </tbody>
+	</table>
+
+    <% if (errors != null) { %>
+        <% for (var i in errors) { %>
+            <p class='red'><%= errors[i] %></p>
+        <% } %>
+    <% } %>
+
+    <h3>Add a New Task!</h3>
+    <form action='/create' method='post'>
+        <div class='row'>
+            <label for='Task Name:'>Task Name</label>
+            <input type='text' name='name'>
+        </div>
+        <div class='row'>
+            <label for='Priority:'>Priority</label>
+            <select name='priority'>
+                <option value='low'>Low</option>
+                <option value='med'>Medium</option>
+                <option value='high'>High</option>
+            </select>
+        </div>
+        <div class='row'>
+            <label for='Deadline:'>Deadline</label>
+            <input type='date' name='deadline'><br>
+        </div>
+        <input type='submit' value='Create'>
+    </form>
+  </body>
+</html>
